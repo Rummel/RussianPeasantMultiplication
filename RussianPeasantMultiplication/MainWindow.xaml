@@ -1,0 +1,107 @@
+﻿<Window x:Class="RussianPeasantMultiplication.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RussianPeasantMultiplication"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="316" Width="472"
+        x:Name="DC">
+    <Window.Resources>
+        <local:LeftStrikeConverter x:Key="LeftStrikeConverter"/>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="28"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="4*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <TextBox 
+                Grid.Column="0" 
+                Margin="1,0,1,1" 
+                TextWrapping="Wrap"
+                Text="{Binding Path=Multiplier}"
+                d:Text="1"
+                PreviewTextInput="PreviewNumberInput" VerticalContentAlignment="Center"
+                />
+            <TextBox  
+                Grid.Column="1"
+                Margin="1,0,1,1" 
+                 TextWrapping="Wrap" 
+                 Text="{Binding Path=Multiplicand}" 
+                 d:Text="1"
+                 PreviewTextInput="PreviewNumberInput" VerticalContentAlignment="Center"
+                />
+            <Button  
+                Grid.Column="2"
+                Content="Calculate"
+                Margin="1,0,1,1" 
+                Click="Button_Click"/>
+            <TextBox  
+                Grid.Column="3"
+                Margin="1,0,1,1" 
+                 TextWrapping="Wrap" 
+                 Text="{Binding Path=Product}" 
+                 d:Text="1"
+                 PreviewTextInput="PreviewNumberInput" VerticalContentAlignment="Center" IsReadOnly="True"
+                />
+        </Grid>
+        <ListView 
+            Grid.Row="1"
+            d:ItemsSource="{d:SampleData ItemCount=5}"
+            ItemsSource="{Binding Path=CalcData}" >
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Left" DisplayMemberBinding="{Binding Left}"  Width="50"/>
+                    <GridViewColumn Header="Right" DisplayMemberBinding="{Binding Right}"  Width="50"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <DataGrid x:Name="dataGrid" Grid.Row="2"
+            d:ItemsSource="{d:SampleData ItemCount=4}"
+                  ItemsSource="{Binding Path=CalcData}" 
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  AlternationCount="2"
+                  RowBackground="White"
+                  AlternatingRowBackground="#FFBDE0FB" >
+
+             <DataGrid.Resources>
+                <Style x:Key="tstyle" TargetType="TextBlock">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Left, Converter={StaticResource LeftStrikeConverter}}" Value="True">
+                            <Setter Property="TextBlock.TextDecorations" Value="Strikethrough" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.Resources>
+            
+
+            <!--<DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource Self},
+                     Path=Left, Converter={StaticResource LeftStrikeConverter}}"/>
+                </Style>
+            </DataGrid.RowStyle>-->
+
+            <!--<DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="TextBlock.TextDecorations" Value="{Binding RelativeSource={RelativeSource Self},
+                    Path=Item.Left, Converter={StaticResource LeftStrikeConverter}}"/>
+                </Style>
+            </DataGrid.RowStyle>-->
+
+            <DataGrid.Columns>
+                <DataGridTextColumn ElementStyle="{StaticResource tstyle}" Header="Left" Binding="{Binding Path=Left}" Width="1*"/>
+                <DataGridTextColumn ElementStyle="{StaticResource tstyle}" Header="Right" Binding="{Binding Path=Right}" Width="1*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>
